@@ -1,15 +1,16 @@
 #puts "\e[H\e[2J" ->画面消去
 
-def print_board(*array)
-  0.upto(2) do |i|
-    0.upto(2) do |j|
+def print_board(*array,size)
+  0.upto(size-1) do |i|
+    0.upto(size-1) do |j|
       if array[i][j] == 1 then
-        print "O"
+        print " O "
       elsif array[i][j] == -1 then
-        print "X"
+        print " X "
       else
-        print "Q"
+        print " Q "
       end
+      print "|"
     end
     puts "\n"
   end
@@ -21,12 +22,15 @@ p1 = gets.chomp
 puts "Please Enter the Name of Player2 > "
 p2 = gets.chomp
 
+puts "Please Enter the Size of Game-Board > "
+size = gets.chomp.to_i
+
 puts "Game Start!"
 
 if gets then
   puts "\e[H\e[2J"
 end
 
-board = Array.new(3, Array.new(3, 0) )
+board = Array.new(size, Array.new(size-1, 0) )
 
-print_board(*board)
+print_board(*board,size)
