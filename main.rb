@@ -82,7 +82,7 @@ end
 
 board = Array.new( size ** 2, 0 )
 
-while board.include?( 0 )  do
+while board.include?(0) do
   print_board( *board, size )  
   puts "#{p1}'s Tern:"
   puts "Please input row number > "
@@ -104,6 +104,9 @@ while board.include?( 0 )  do
   check( *board, size )
   puts "\e[H\e[2J"
 
+  if board.include?(0) != true then
+    break
+  end
   print_board( *board, size )  
   puts "#{p2}'s Tern:"
   puts "Please input row number > "
