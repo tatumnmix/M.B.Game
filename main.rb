@@ -38,7 +38,7 @@ def position_select
     puts "Input Column Number > "
     column = gets.chomp
   end
-  return row.to_i, column.to_i
+  [row.to_i, column.to_i]
 end
 
 def clear_screen
