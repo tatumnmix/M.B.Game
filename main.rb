@@ -8,7 +8,7 @@ class Player
   def turn(*board, size, number)
     row, column = input(*board, size, @name, "'s Turn:")
     until board[size * row + column] == 0 do
-      row, column = input(@name, " : Please Select Empty Square")
+      row, column = input(*board, size, @name, " : Please Select Empty Square")
     end
     board[size * row + column] = number
     check(*board, size)
@@ -20,7 +20,7 @@ end
 def input(*board, size, name, text)
   print_board(*board, size)
   puts "#{name}#{text}"
-  row, column = position_select
+  position_select
 end
 
 def board_status(*board)
