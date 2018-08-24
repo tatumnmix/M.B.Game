@@ -3,52 +3,60 @@
 class Player
   def initialize(name)
     @name = name
-  end 
-  def tern(*board, size, number)
-    print_board(*board, size)  
-    puts "#{@name}'s Tern:"
-    puts "Please input row number > "
-    row = nil 
-    column = nil
-    row = gets.chomp.to_i
-    puts "Please Input Column Number > "
-    column = gets.chomp.to_i
+  end
+  
+  def turn(*board, size, number)
+    row, column = input(*board, size, @name, "'s Turn:")
     until board[size * row + column] == 0 do
-      puts "\e[H\e[2J"
-      print_board(*board, size)
-      puts "#{@name} : Please Select Empty Square"
-      puts "Input Row Number > "
-      row = gets.chomp.to_i
-      puts "Input Column Number > "
-      if column = gets.chomp.to_i then
-        puts "\e[H\e[2J"
-      end
+      row, column = input(*board, size, @name, " : Please Select Empty Square")
     end
     board[size * row + column] = number
     check(*board, size)
-    if board.include?(0) == false then
-      puts "Game-Board is Full!"
-      puts "Game Over"
-      if gets then
-        exit
-      end
-    end
-    puts "\e[H\e[2J"
-    return *board#いらない？
+    board_status(*board)
+    board
   end
 end
 
-def print_board(*array, size)
-  0.upto(size**2) do |i|
-    if i % size == 0 then
+def input(*board, size, name, text)
+  print_board(*board, size)
+  puts "#{name}#{text}"
+  position_select
+end
+
+def board_status(*board)
+  return if board.include?(0)
+  puts "Game-Board is Full!"
+  puts "~Game Over~"
+  exit if gets
+end
+
+def position_select
+  row = column = ""
+  while row == "" || column == "" do
+    puts "Input Row Number > "
+    row = gets.chomp
+    puts "Input Column Number > "
+    column = gets.chomp
+  end
+  [row.to_i, column.to_i]
+end
+
+def clear_screen
+  puts "\e[H\e[2J"
+end
+
+def print_board(*board, size_of_board)
+  clear_screen
+  (0..size_of_board**2).each do |i|
+    if i % size_of_board == 0
       puts "\n"
     end
-    case array[i]
-    when 1 then
+    case board[i]
+    when 1
       print " O |"
-    when -1 then
+    when -1
       print " X |"
-    when 0 then
+    when 0
       print "   |"
     end
   end
@@ -56,47 +64,60 @@ end
 
 def result(num, size)
   if num == size then
-    puts "\e[H\e[2J"
+    clear_screen
     puts "Winner : Player1!"
-    if gets then
-      exit
-    end
+    exit if gets
   elsif num == size * (-1) then
-    puts "\e[H\e[2J"
+    clear_screen
     puts "Winner : Player2!"
-    if gets then
-      exit
-    end
+    exit if gets
   end
 end
 
-def check(*array, size)
+def check(*board, size)
+  repeat_time = size - 1
   #横
-  0.upto(size - 1) do |i|
+  check_widthwise(*board, repeat_time, size)
+  #縦
+  check_lengthwise(*board, repeat_time, size)
+  #斜め\
+  check_left_slanting(*board, repeat_time, size)
+  #斜め /
+  check_right_slanting(*board, repeat_time, size)
+end
+
+def check_widthwise(*board, repeat_time, size)
+  (0..repeat_time).each do |i|
     num = 0
-    0.upto(size - 1) do |j|
-      num += array[i * size + j]
+    (0..repeat_time).each do |j|
+      num += board[i * size + j]
     end
     result(num, size) 
   end
-  #縦
-  0.upto(size - 1) do |i|
+end
+
+def check_lengthwise(*board, repeat_time, size)
+  (0..repeat_time).each do |i|
     num = 0
-    0.upto(size - 1) do |j|
-      num += array[i + size * j]
+    (0..repeat_time).each do |j|
+      num += board[i + size * j]
     end
-    result(num, size)
+    result(num, size) 
   end
-  #斜め\
+end
+
+def check_left_slanting(*board, repeat_time, size)
   num = 0
-  0.upto(size - 1) do |i|
-      num += array[size * i + i]
+  (0..repeat_time).each do |i|
+    num += board[size * i + i]
   end
   result(num, size)
-  #斜め /
+end
+
+def check_right_slanting(*board, repeat_time, size)
   num = 0
-  0.upto(size - 1) do |i|
-      num += array[size * i + (size - 1 - i)]
+  (0..repeat_time).each do |i|
+    num += board[size * i + (size - 1 - i)]
   end
   result(num, size)
 end
@@ -113,13 +134,11 @@ size = gets.chomp.to_i
 
 puts "Game Start!"
 
-if gets then
-  puts "\e[H\e[2J"
-end
+clear_screen if gets
 
 board = Array.new(size**2, 0)
 
 while true do
-  board = p1.tern(*board, size, 1)
-  board = p2.tern(*board, size, -1)
+  board = p1.turn(*board, size, 1)
+  board = p2.turn(*board, size, -1)
 end
