@@ -31,13 +31,14 @@ def board_status(*board)
 end
 
 def position_select
-  puts "Input Row Number > "
-  row = gets.chomp.to_i
-  puts "Input Column Number > "
-  if column = gets.chomp.to_i
-    clear_screen
+  row = column = ""
+  while row == "" || column == "" do
+    puts "Input Row Number > "
+    row = gets.chomp
+    puts "Input Column Number > "
+    column = gets.chomp
   end
-  return row, column
+  return row.to_i, column.to_i
 end
 
 def clear_screen
