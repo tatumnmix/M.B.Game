@@ -3,6 +3,7 @@ class Screen
   def self.clear_screen
     puts "\e[H\e[2J"
   end
+  
   def self.print_board(*board, size_of_board)
     clear_screen
     (0..size_of_board**2).each do |i|
