@@ -6,19 +6,21 @@ class Player
   end
   
   def turn(*board, size, number)
-    print_board(*board, size)  
-    puts "#{@name}'s Turn:"
-    row, column = position_select
+    row, column = input(*board, size, @name, "'s Turn:")
     until board[size * row + column] == 0 do
-      print_board(*board, size)
-      puts "#{@name} : Please Select Empty Square"
-      row, column = position_select
+      row, column = input(@name, " : Please Select Empty Square")
     end
     board[size * row + column] = number
     check(*board, size)
     board_status(*board)
     board
   end
+end
+
+def input(*board, size, name, text)
+  print_board(*board, size)
+  puts "#{name}#{text}"
+  row, column = position_select
 end
 
 def board_status(*board)
