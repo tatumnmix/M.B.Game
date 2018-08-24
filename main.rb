@@ -3,15 +3,16 @@
 class Player
   def initialize(name)
     @name = name
-  end 
+  end
+  
   def turn(*board, size, number)
     print_board(*board, size)  
     puts "#{@name}'s Turn:"
-    row, column = position_select()
+    row, column = position_select
     until board[size * row + column] == 0 do
       print_board(*board, size)
       puts "#{@name} : Please Select Empty Square"
-      row, column = position_select()
+      row, column = position_select
     end
     board[size * row + column] = number
     check(*board, size)
@@ -21,14 +22,13 @@ class Player
 end
 
 def board_status(*board)
-  unless board.include?(0) 
-    puts "Game-Board is Full!"
-    puts "~Game Over~"
-    exit if gets
-  end
+  return if board.include?(0)
+  puts "Game-Board is Full!"
+  puts "~Game Over~"
+  exit if gets
 end
 
-def position_select()
+def position_select
   puts "Input Row Number > "
   row = gets.chomp.to_i
   puts "Input Column Number > "
@@ -49,11 +49,11 @@ def print_board(*board, size_of_board)
       puts "\n"
     end
     case board[i]
-    when 1 then
+    when 1
       print " O |"
-    when -1 then
+    when -1
       print " X |"
-    when 0 then
+    when 0
       print "   |"
     end
   end
